@@ -1,0 +1,11 @@
+{
+    "name": "node-torrent",
+    "version": "1.0.0",
+    "description": "A bittorrent client for education purposes! (following tutorial https://allenkim67.github.io/programming/2016/05/04/how-to-make-your-own-bittorrent-client.html)",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Samuel Kong",
+    "license": "ISC"
+  }
