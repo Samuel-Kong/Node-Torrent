@@ -10,6 +10,7 @@ const util = require('./util');
 module.exports.getPeers = (torrent, callback) => {
     const socket = dgram.createSocket('udp4');
     const url = torrent.announce.toString('utf8');
+
     udpSend(socket, buildConnReq(), url);
 
     socket.on('message', response => {
@@ -63,7 +64,7 @@ function buildAnnounceReq(connId, torrent, port=6881) {
     torrentParser.size(torrent).copy(buf, 64);
     Buffer.alloc(8).copy(buf, 72);
     buf.writeUInt32BE(0, 80);
-    buf.writeUInt32BE(0, 80);
+    buf.writeUInt32BE(0, 84);
     crypto.randomBytes(4).copy(buf, 88);
     buf.writeInt32BE(-1, 92);
     buf.writeUInt16BE(port, 96);
