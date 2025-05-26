@@ -10,7 +10,6 @@ const util = require('./util');
 module.exports.getPeers = (torrent, callback) => {
     const socket = dgram.createSocket('udp4');
     const url = torrent.announce.toString('utf8');
-
     udpSend(socket, buildConnReq(), url);
 
     socket.on('message', response => {
@@ -30,7 +29,11 @@ function udpSend(socket, message, rawUrl, callback=()=>{}) {
     socket.send(message, 0, message.length, url.port, url.hostname, callback);
 }
 
-function respType(resp) {}
+function respType(resp) {
+    const action = resp.readUInt32BE(0);
+    if (action === 0) return 'connect';
+    if (action === 1) return 'announce';
+}
 
 function buildConnReq() {
     const buf = Buffer.allocUnsafe(16);
