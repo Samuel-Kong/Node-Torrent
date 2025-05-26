@@ -5,26 +5,26 @@ const Buffer = require('buffer').Buffer;
 const urlParse = require('url').parse;
 
 module.exports.getPeers = (torrent, callback) => {
-    const socket = dgram.createSocket('udp4');
-    const url = torrent.announce.toString('utf8');
+  const socket = dgram.createSocket('udp4');
+  const url = torrent.announce.toString('utf8');
 
-    udpSend(socket, buildConnReq(), url);
+  udpSend(socket, buildConnReq(), url);
 
-    socket.on('message', response => {
-        if (respType(response) === 'connect') {
-            const connResp = parseConnResp(response);
-            const announceReq = buildAnnounceReq(connResp.connectionId);
-            udpSend(socket, announceReq, url);
-        } else if (respType(response) === 'announce') {
-            const announceResp = parseAnnounceResp(response);
-            callback(announceResp.peers);
-        }
-    });
+  socket.on('message', response => {
+    if (respType(response) === 'connect') {
+      const connResp = parseConnResp(response);
+      const announceReq = buildAnnounceReq(connResp.connectionId);
+      udpSend(socket, announceReq, url);
+    } else if (respType(response) === 'announce') {
+      const announceResp = parseAnnounceResp(response);
+      callback(announceResp.peers);
+    }
+  });
 };
 
 function udpSend(socket, message, rawUrl, callback=()=>{}) {
-    const url = urlParse(rawUrl);
-    socket.send(message, 0, message.length, url.port, url.hostname, callback);
+  const url = urlParse(rawUrl);
+  socket.send(message, 0, message.length, url.port, url.hostname, callback);
 }
 
 function respType(resp) {
